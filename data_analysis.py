@@ -1,5 +1,3 @@
-# data_analysis.py
-
 import pandas as pd
 import sqlite3
 import matplotlib.pyplot as plt

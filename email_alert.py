@@ -1,5 +1,3 @@
-# email_alert.py
-
 import smtplib
 from email.mime.text import MIMEText
 import sqlite3
@@ -7,8 +5,7 @@ import datetime
 import pandas as pd
 import joblib
 
-# Configuration
-SMTP_SERVER = 'smtp.example.com'  # Replace with your SMTP server
+SMTP_SERVER = 'smtp.example.com'
 SMTP_PORT = 587
 SMTP_USER = 'your_email@example.com'
 SMTP_PASSWORD = 'your_password'
@@ -37,7 +34,6 @@ def load_model():
 def check_anomalies():
     conn = sqlite3.connect('honeypot_logs.db')
     c = conn.cursor()
-    # Load recent SSH logs (last 1 hour)
     since_time = (datetime.datetime.now() - datetime.timedelta(hours=1)).isoformat()
     c.execute('''
         SELECT src_ip, hour
@@ -51,8 +47,6 @@ def check_anomalies():
         return []
 
     df = pd.DataFrame(rows, columns=['src_ip', 'hour'])
-    # Encode src_ip as done during training
-    # Note: In a real scenario, ensure consistent encoding
     df['src_ip'] = df['src_ip'].astype('category').cat.codes
 
     model = load_model()
@@ -65,7 +59,6 @@ def main():
     if len(anomalies) > 0:
         message = "Anomalous SSH login attempts detected from the following IPs:\n\n"
         for ip_code in anomalies:
-            # Reverse mapping of src_ip codes to actual IPs would be needed
             message += f"Source IP Code: {ip_code}\n"
         send_email("Honeypot Alert: Anomalous SSH Attempts Detected", message)
 

@@ -8,8 +8,6 @@ class HoneypotAttacker:
     def __init__(self, target_url="http://localhost:8080"):
         self.target_url = target_url
         self.login_url = f"{target_url}/login"
-        
-        # Différents payloads d'attaque
         self.sql_injection_payloads = [
             "' OR '1'='1",
             "admin' --",
@@ -141,7 +139,7 @@ class HoneypotAttacker:
                 attack()
             except Exception as e:
                 print(f"Error during {attack.__name__}: {e}")
-            time.sleep(2)  # Pause between different attack types
+            time.sleep(2)
 
 if __name__ == "__main__":
     attacker = HoneypotAttacker("http://localhost:8080")

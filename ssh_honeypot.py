@@ -1,15 +1,10 @@
-# ssh_honeypot.py
-
 import socket
 import threading
 import sqlite3
 import datetime
 
-# Configuration
-HOST = '0.0.0.0'  # Listen on all interfaces
-PORT = 2222       # Non-standard SSH port to avoid conflicts
-
-# Initialize SQLite database
+HOST = '0.0.0.0'
+PORT = 2222
 conn = sqlite3.connect('honeypot_logs.db', check_same_thread=False)
 c = conn.cursor()
 c.execute('''
@@ -37,9 +32,7 @@ def handle_client(conn_client, addr):
         conn_client.sendall(b"SSH-2.0-OpenSSH_7.4\r\n")
         data = conn_client.recv(1024).decode('utf-8').strip()
         if data.startswith("SSH-"):
-            # Placeholder for SSH handshake
             pass
-        # Simulate authentication prompt
         conn_client.sendall(b"Username: ")
         username = conn_client.recv(1024).decode('utf-8').strip()
         conn_client.sendall(b"Password: ")

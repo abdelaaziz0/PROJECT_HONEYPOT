@@ -1,10 +1,7 @@
-# packet_capture.py
-
 from scapy.all import sniff
 import sqlite3
 import datetime
 
-# Configuration
 INTERFACES = ["eth0"]
 FILTER = "tcp port 2222 or tcp port 8080"
 

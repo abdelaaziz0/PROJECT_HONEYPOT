@@ -1,16 +1,12 @@
-# generate_honeypot_data.py
-
 import sqlite3
 from faker import Faker
 import random
 from datetime import datetime, timedelta
 
-# Configuration
 DATABASE = 'honeypot_logs.db'
-NUM_SSH_ENTRIES = 5000    # Nombre d'entrées pour ssh_logs
-NUM_WEB_ENTRIES = 10000   # Nombre d'entrées pour web_logs
+NUM_SSH_ENTRIES = 5000   
+NUM_WEB_ENTRIES = 10000 
 
-# Types d'attaques pour SSH
 ssh_attack_types = [
     'SSH Brute-force',
     'SSH Dictionary Attack',
@@ -18,7 +14,6 @@ ssh_attack_types = [
     'SSH Password Spraying'
 ]
 
-# Types d'attaques pour Web
 web_attack_types = [
     'SQL Injection',
     'Cross-Site Scripting (XSS)',
@@ -30,10 +25,9 @@ web_attack_types = [
     'Path Traversal',
     'XML External Entity (XXE)',
     'Directory Listing',
-    'Normal'  # Trafic normal
+    'Normal'  
 ]
 
-# URL endpoints pour les attaques Web
 web_attack_endpoints = {
     'SQL Injection': [
         "/login?user=admin' OR '1'='1",
@@ -83,7 +77,7 @@ web_attack_endpoints = {
         "/uploads/",
         "/files/"
     ],
-    'Normal': [  # Trafic normal
+    'Normal': [ 
         "/home",
         "/about",
         "/contact",
@@ -97,7 +91,7 @@ web_attack_endpoints = {
     ]
 }
 
-# User Agents diversifiés
+
 user_agents = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
@@ -111,7 +105,6 @@ user_agents = [
     'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
 ]
 
-# Fonctions pour générer des attaques spécifiques
 def generate_ssh_attack(fake):
     attempted_passwords = [
         "' OR '1'='1",
@@ -184,7 +177,6 @@ def generate_user_agent():
     return random.choice(user_agents)
 
 def generate_timestamp(fake):
-    # Génère un timestamp aléatoire dans les 30 derniers jours
     start_date = datetime.now() - timedelta(days=30)
     return fake.iso8601(tzinfo=None)
 
@@ -196,7 +188,6 @@ def main():
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
 
-    # Générer des entrées pour ssh_logs
     ssh_entries = []
     for _ in range(NUM_SSH_ENTRIES):
         timestamp = generate_timestamp(fake)
@@ -211,14 +202,13 @@ def main():
     ''', ssh_entries)
     print(f"Insérées {NUM_SSH_ENTRIES} entrées dans ssh_logs.")
 
-    # Générer des entrées pour web_logs
     web_entries = []
     for _ in range(NUM_WEB_ENTRIES):
         timestamp = generate_timestamp(fake)
         src_ip = generate_ip(fake)
         attack_type = random.choices(
             web_attack_types,
-            weights=[10, 10, 5, 5, 5, 5, 5, 3, 3, 3, 50],  # Poids pour diversifier les attaques et le trafic normal
+            weights=[10, 10, 5, 5, 5, 5, 5, 3, 3, 3, 50],
             k=1
         )[0]
         attempted_url = generate_web_attack(fake, attack_type)
@@ -231,7 +221,6 @@ def main():
     ''', web_entries)
     print(f"Insérées {NUM_WEB_ENTRIES} entrées dans web_logs.")
 
-    # Sauvegarder (commit) les changements et fermer la connexion
     conn.commit()
     conn.close()
     print("Insertion des données terminée.")

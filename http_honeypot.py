@@ -1,5 +1,3 @@
-# http_honeypot.py
-
 import socket
 import threading
 import sqlite3

@@ -1,10 +1,7 @@
-# ip_blocker.py
-
 import os
 import sqlite3
 import datetime
 
-# Configuration
 SSH_THRESHOLD = 5
 
 def get_malicious_ips():
